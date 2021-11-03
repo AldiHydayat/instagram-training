@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-	before_action :authenticate_user!, only: [:new, :create, :show, :edit, :update, :destroy]
+	before_action :authenticate_user!, only: [:new, :create, :show, :edit, :update, :destroy, :like]
 
 	def index
 		@posts = Post.all
@@ -31,6 +31,16 @@ class PostsController < ApplicationController
 
 	def destroy
 		
+	end
+
+	def like
+		@post = Post.find(params[:id])
+		if current_user.liked? @post
+			@post.unliked_by current_user
+		else
+			@post.liked_by current_user
+		end
+		redirect_to root_path
 	end
 
 	private
