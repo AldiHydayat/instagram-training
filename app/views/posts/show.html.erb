@@ -1,0 +1,14 @@
+<%= @post.user.name %>
+<br>
+<%= image_tag(@post.file_post_url, width: "350", height: "250") if @post.file_post? %>
+
+<% if @post.comments.present? %>
+	<h4>Komentar</h4>
+	<% @post.comments.each do |comments| %>
+		Name: <%= comments.user.name %>
+		<br>
+		Comment: <%= comments.comment %>
+		<br>
+	<% end %>
+<% end %>
+<br>
