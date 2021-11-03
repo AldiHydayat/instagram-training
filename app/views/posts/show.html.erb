@@ -2,6 +2,13 @@
 <br>
 <%= image_tag(@post.file_post_url, width: "350", height: "250") if @post.file_post? %>
 
+<%= form_for @comment, url: post_comments_path(@post.id) do |f| %>
+	<%= f.label :comment %>
+	<%= f.text_area :comment %>
+	<br>
+	<%= f.submit 'Submit' %>
+<% end %>
+
 <% if @post.comments.present? %>
 	<h4>Komentar</h4>
 	<% @post.comments.each do |comments| %>
