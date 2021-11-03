@@ -1,0 +1,9 @@
+<%= form_for @post do |form| %>
+	<%= form.label :file_post, 'Foto / Video' %>
+	<%= form.file_field :file_post %>
+	<br>
+	<%= form.label :caption %>
+	<%= form.text_area :caption %>
+	<br>
+	<%= form.submit 'Posting' %>
+<% end %>
