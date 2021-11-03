@@ -1,9 +1,15 @@
 <%= form_for @post do |form| %>
 	<%= form.label :file_post, 'Foto / Video' %>
 	<%= form.file_field :file_post %>
+	<% if @post.errors.messages[:file_post].any? && @post.errors[:file_post][1] %>
+		<%= @post.errors[:file_post][1] %>
+	<% elsif @post.errors.messages[:file_post].any? %>
+		<%= @post.errors[:file_post].first %>
+	<% end %>
 	<br>
 	<%= form.label :caption %>
 	<%= form.text_area :caption %>
+	<%= @post.errors.messages[:caption].any? ? @post.errors[:caption].first : '' %>
 	<br>
 	<%= form.submit 'Posting' %>
 <% end %>
