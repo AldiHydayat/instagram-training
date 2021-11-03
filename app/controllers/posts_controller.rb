@@ -46,6 +46,11 @@ class PostsController < ApplicationController
 		redirect_to root_path
 	end
 
+	def liked
+		@posts = current_user.find_liked_items
+		render 'index'
+	end
+
 	private
 
 	def post_params

@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   	member do 
   		put "like" => "posts#like"
   	end
+  	collection do
+  		get "like" => "posts#liked"
+  	end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
