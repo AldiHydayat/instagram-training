@@ -1,0 +1,8 @@
+<%  posts.each do |post|  %>
+	<%= link_to post.user.name, user_post_path(post.user) %>
+	<br>
+	<%= image_tag(post.file_post_url, width: "350", height: "250") if post.file_post? %>
+	<br>
+	<%= link_to "#{post.get_likes.size} Likes", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
+	<hr>
+<% end %>
