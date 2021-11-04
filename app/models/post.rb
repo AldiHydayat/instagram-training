@@ -3,7 +3,8 @@ class Post < ApplicationRecord
 	has_many :comments, dependent: :destroy
 
 	validates :file_post, :caption, presence: true
+	serialize :file_post, Array
 
-	mount_uploader :file_post, PostUploader
+	mount_uploaders :file_post, PostUploader
 	acts_as_votable
 end

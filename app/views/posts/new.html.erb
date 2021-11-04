@@ -1,6 +1,6 @@
 <%= form_for @post do |form| %>
 	<%= form.label :file_post, 'Foto / Video' %>
-	<%= form.file_field :file_post %>
+	<%= form.file_field :file_post, multiple: true %>
 	<% if @post.errors.messages[:file_post].any? && @post.errors[:file_post][1] %>
 		<%= @post.errors[:file_post][1] %>
 	<% elsif @post.errors.messages[:file_post].any? %>

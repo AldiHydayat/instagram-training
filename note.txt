@@ -1,7 +1,7 @@
 profil v
 halaman sendiri dan orang lain v
-search 
+search v
 edit profile v
 bagikan (repost)
-multi upload
+multi upload v
 disukai beberapa orang v

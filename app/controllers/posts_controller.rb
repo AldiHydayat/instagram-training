@@ -16,6 +16,8 @@ class PostsController < ApplicationController
 	def create
 		@post = Post.new(post_params)
 		@post.user = current_user
+		# render plain: params[:post][:file_post].inspect
+		# return false
 		if @post.save
 			redirect_to root_path
 		else
@@ -67,6 +69,6 @@ class PostsController < ApplicationController
 	private
 
 	def post_params
-		params.require(:post).permit(:file_post, :caption)
+		params.require(:post).permit(:caption, {file_post: []})
 	end
 end
