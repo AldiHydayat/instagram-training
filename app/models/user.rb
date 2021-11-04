@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates :name, :username, presence: true
   validates :username, uniqueness: true
 
-  has_many :posts
-  has_many :comments
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
   acts_as_voter
 end

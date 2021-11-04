@@ -51,6 +51,10 @@ class PostsController < ApplicationController
 		render 'index'
 	end
 
+	def mypost
+		@posts = Post.where(user: current_user)
+	end
+
 	private
 
 	def post_params
