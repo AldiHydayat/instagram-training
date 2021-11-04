@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-	before_action :authenticate_user!, only: [:new, :create, :show, :edit, :update, :destroy, :like]
+	before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :like, :mypost, :repost, :liked]
 
 	def index
 		if params[:keyword] && params[:keyword] != ''
@@ -16,8 +16,6 @@ class PostsController < ApplicationController
 	def create
 		@post = Post.new(post_params)
 		@post.user = current_user
-		# render plain: params[:post][:file_post].inspect
-		# return false
 		if @post.save
 			redirect_to root_path
 		else
@@ -64,6 +62,14 @@ class PostsController < ApplicationController
 	def get_by_user
 		@posts = Post.where(user: params[:id])
 		render 'mypost'
+	end
+
+	def repost
+		@original_post = Post.find(params[:id])
+
+		@repost = Post.new(file_post: @original_post.file_post, caption: @original_post.caption, repost_id: @original_post.id, user: current_user);
+		@repost.save
+		redirect_to root_path
 	end
 
 	private

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   	member do 
   		put "like" => "posts#like"
 		get "user" => "posts#get_by_user"
+		post "repost" => "posts#repost"
   	end
 
   	collection do
