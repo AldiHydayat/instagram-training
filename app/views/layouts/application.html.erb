@@ -15,6 +15,10 @@
     <% else %>
       <%= link_to 'Login', new_user_session_path %> | <%= link_to 'Daftar', new_user_registration_path %>
     <% end %>
+    <%= form_tag('/', authenticity_token: false, method: :get) do %>
+      <%= text_field_tag :keyword %>
+      <%= submit_tag 'Search' %>
+    <% end %>
     <br>
     <%= yield %>
   </body>

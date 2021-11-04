@@ -4,5 +4,10 @@
 	<%= image_tag(post.file_post_url, width: "350", height: "250") if post.file_post? %>
 	<br>
 	<%= link_to "#{post.get_likes.size} Likes", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
+	<br>
+	<% if post.votes_for.up.by_type(User).voters.present? %> 
+		disukai oleh 
+		<%= post.votes_for.up.by_type(User).voters[0].name %><%= post.votes_for.up.by_type(User).voters[1].present? ? " dan #{post.votes_for.up.by_type(User).voters[1].name}" : '' %>
+	<% end %>
 	<hr>
 <% end %>

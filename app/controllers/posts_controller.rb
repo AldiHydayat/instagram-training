@@ -2,7 +2,11 @@ class PostsController < ApplicationController
 	before_action :authenticate_user!, only: [:new, :create, :show, :edit, :update, :destroy, :like]
 
 	def index
-		@posts = Post.all
+		if params['keyword'] && params['keyword'] != ''
+			@posts = Post.where()
+		else
+			@posts = Post.all
+		end
 	end
 
 	def new
