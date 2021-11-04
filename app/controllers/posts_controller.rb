@@ -2,8 +2,8 @@ class PostsController < ApplicationController
 	before_action :authenticate_user!, only: [:new, :create, :show, :edit, :update, :destroy, :like]
 
 	def index
-		if params['keyword'] && params['keyword'] != ''
-			@posts = Post.where()
+		if params[:keyword] && params[:keyword] != ''
+			@users = User.where('name like ?', "%#{params[:keyword]}%")
 		else
 			@posts = Post.all
 		end

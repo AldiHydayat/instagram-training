@@ -1,3 +1,9 @@
 <% if @posts.present? %>
 	<%= render 'show_posts', posts: @posts %>
+<% elsif @users && params['keyword'] != '' %>
+	<% if @users.present? %>
+		<% @users.each do |user| %>
+		<%= link_to user.name, user_post_path(user) %>
+		<% end %>
+	<% end %>
 <% end %>
