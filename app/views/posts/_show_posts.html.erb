@@ -2,12 +2,7 @@
 	<%= link_to post.user.name, user_post_path(post.user) %>
 	<br>
 	<% post.file_post.each do |f| %>
-	<%= image_tag f.url %>
-		<%
-=begin%>
- <%= image_tag(f.file_post_url, width: "350", height: "250") if post.file_post? %> 
-<%
-=end%>
+		<%= image_tag(f.url, width: "350", height: "250") %>
 	<% end %>
 	<br>
 	<%= link_to "#{post.get_likes.size} Likes", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
