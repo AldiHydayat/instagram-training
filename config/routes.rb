@@ -4,9 +4,12 @@ Rails.application.routes.draw do
 
   resources :posts do
   	resources :comments, only: [:create]
+
   	member do 
   		put "like" => "posts#like"
+		get "user" => "posts#get_by_user"
   	end
+
   	collection do
   		get "like" => "posts#liked"
 		get "mypost" => "posts#mypost"

@@ -55,6 +55,11 @@ class PostsController < ApplicationController
 		@posts = Post.where(user: current_user)
 	end
 
+	def get_by_user
+		@posts = Post.where(user: params[:id])
+		render 'mypost'
+	end
+
 	private
 
 	def post_params
