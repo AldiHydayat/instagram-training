@@ -1,3 +1,7 @@
+Followers <%= @posts.first.user.followers.count %>
+<br>
+Followers <%= @posts.first.user.followings.count %>
+<br>
 <% if @posts.present? %>
 	<%= render 'show_posts', posts: @posts %>
 <% else %>
