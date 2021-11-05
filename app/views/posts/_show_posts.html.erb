@@ -1,8 +1,8 @@
 <%  posts.each do |post|  %>
 	<% if post.repost_id.present? %>
- <%= link_to post.user.name, user_post_path(post.user) %> shared from <%= link_to post.repost.user.name, user_post_path(post.repost.user) %>  
+ <%= link_to post.user.name.capitalize, user_post_path(post.user) %> shared from <%= link_to post.repost.user.name.capitalize, user_post_path(post.repost.user) %>  
 	<% else %>
-		<%= link_to post.user.name, user_post_path(post.user) %> 
+		<%= link_to post.user.name.capitalize, user_post_path(post.user) %> 
 	<% end %>
 	<br>
 	<% post.file_post.each do |f| %>
@@ -12,8 +12,14 @@
 	<%= link_to "#{post.get_likes.size} Likes", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %> | <%= link_to "Bagikan", repost_post_path(post), method: :post %>
 	<br>
 	<% if post.votes_for.up.by_type(User).voters.present? %> 
-		disukai oleh 
-		<%= post.votes_for.up.by_type(User).voters[0].name %><%= post.votes_for.up.by_type(User).voters[1].present? ? " dan #{post.votes_for.up.by_type(User).voters[1].name}" : '' %>
+		disukai oleh
+		<% if post.votes_for.up.by_type(User).voters.length == 1 %>
+			<%= post.votes_for.up.by_type(User).voters.first.name %>
+		<% elsif post.votes_for.up.by_type(User).voters.length == 2 %>
+			<%= post.votes_for.up.by_type(User).voters.pluck(:name).to_sentence(two_words_connector: " dan ") %>
+		<% elsif post.votes_for.up.by_type(User).voters.length > 2 %>
+			<%= post.votes_for.up.by_type(User).voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %> dan lainnya
+		<% end %>
 	<% end %>
 	<hr>
 <% end %>
