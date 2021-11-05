@@ -3,9 +3,9 @@ class PostsController < ApplicationController
 
 	def index
 		if params[:keyword] && params[:keyword] != ''
-			@users = User.where('name like ?', "%#{params[:keyword]}%")
+			@users = User.where('name like ?', "%#{params[:keyword]}%").order(created_at: :desc)
 		else
-			@posts = Post.all
+			@posts = Post.all.order(created_at: :desc)
 		end
 	end
 
@@ -56,11 +56,11 @@ class PostsController < ApplicationController
 	end
 
 	def mypost
-		@posts = Post.where(user: current_user)
+		@posts = Post.where(user: current_user).order(created_at: :desc)
 	end
 
 	def get_by_user
-		@posts = Post.where(user: params[:id])
+		@posts = Post.where(user: params[:id]).order(created_at: :desc)
 		render 'mypost'
 	end
 

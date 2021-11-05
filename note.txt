@@ -7,9 +7,10 @@ multi upload v
 disukai beberapa orang v
 pake array join to_sentences v
 upcase downcase v
-urutan posting
-pluralize
-hilangkn share jika post sebuah repost
+urutan posting v
+pluralize v
+hilangkn share jika post sebuah repost v
+tampilkan caption 10 karakter pertama
 reply comment
 private dan public account approve
 follow show followers
