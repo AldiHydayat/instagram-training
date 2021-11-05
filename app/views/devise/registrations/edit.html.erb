@@ -19,6 +19,11 @@
     <%= f.text_field :username, autofocus: true, autocomplete: "username" %>
   </div>
 
+  <div class="field">
+    <%= f.label :is_private %><br />
+    <%= f.check_box :is_private %>
+  </div>
+
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>

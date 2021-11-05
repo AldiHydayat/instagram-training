@@ -1,38 +1,40 @@
 <%  posts.each do |post|  %>
-	<% if post.repost_id.present? %>
- 		<%= link_to post.user.name.capitalize, user_post_path(post.user) %> shared from <%= link_to post.repost.user.name.capitalize, user_post_path(post.repost.user) %>  
-	<% else %>
-		<%= link_to post.user.name.capitalize, user_post_path(post.user) %> 
-	<% end %>
-	<% if post.user.followers.where(follower: current_user).present? && post.user != current_user %>
-	| <%= link_to 'Unfollow', follow_user_path(post.user), method: :post %>
-	<% elsif post.user != current_user %>
-	| <%= link_to 'Follow', follow_user_path(post.user), method: :post %>
-	<% end %>
-	<br>
-	<% post.file_post.each do |f| %>
-		<%= image_tag(f.url, width: "350", height: "250") %>
-	<% end %>
-	<br>
-	<%= truncate(post.caption, length: 10) %>
-	<% if post.caption.length >=10 %>
-		<%= link_to "Lainnya", post_path(post.id) %>
-	<% end %>
-	<br>
-	<%= link_to "#{pluralize(post.get_likes.size, 'Like')}", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
-	<% unless post.repost_id.present? %>
-		| <%= link_to "Bagikan", repost_post_path(post), method: :post %>
-	<% end %>
-	<br>
-	<% if post.votes_for.up.by_type(User).voters.present? %> 
-		disukai oleh
-		<% if post.votes_for.up.by_type(User).voters.length == 1 %>
-			<%= post.votes_for.up.by_type(User).voters.first.name %>
-		<% elsif post.votes_for.up.by_type(User).voters.length == 2 %>
-			<%= post.votes_for.up.by_type(User).voters.pluck(:name).to_sentence(two_words_connector: " dan ") %>
-		<% elsif post.votes_for.up.by_type(User).voters.length > 2 %>
-			<%= post.votes_for.up.by_type(User).voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %> dan lainnya
+	<% unless post.user.is_private == 1 && post.user != current_user %>
+		<% if post.repost_id.present? %>
+			<%= link_to post.user.name.capitalize, user_post_path(post.user) %> shared from <%= link_to post.repost.user.name.capitalize, user_post_path(post.repost.user) %>  
+		<% else %>
+			<%= link_to post.user.name.capitalize, user_post_path(post.user) %> 
 		<% end %>
+		<% if post.user.followers.where(follower: current_user).present? && post.user != current_user %>
+		| <%= link_to 'Unfollow', follow_user_path(post.user), method: :post %>
+		<% elsif post.user != current_user %>
+		| <%= link_to 'Follow', follow_user_path(post.user), method: :post %>
+		<% end %>
+		<br>
+		<% post.file_post.each do |f| %>
+			<%= image_tag(f.url, width: "350", height: "250") %>
+		<% end %>
+		<br>
+		<%= truncate(post.caption, length: 10) %>
+		<% if post.caption.length >=10 %>
+			<%= link_to "Lainnya", post_path(post.id) %>
+		<% end %>
+		<br>
+		<%= link_to "#{pluralize(post.get_likes.size, 'Like')}", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
+		<% unless post.repost_id.present? %>
+			| <%= link_to "Bagikan", repost_post_path(post), method: :post %>
+		<% end %>
+		<br>
+		<% if post.votes_for.up.by_type(User).voters.present? %> 
+			disukai oleh
+			<% if post.votes_for.up.by_type(User).voters.length == 1 %>
+				<%= post.votes_for.up.by_type(User).voters.first.name %>
+			<% elsif post.votes_for.up.by_type(User).voters.length == 2 %>
+				<%= post.votes_for.up.by_type(User).voters.pluck(:name).to_sentence(two_words_connector: " dan ") %>
+			<% elsif post.votes_for.up.by_type(User).voters.length > 2 %>
+				<%= post.votes_for.up.by_type(User).voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %> dan lainnya
+			<% end %>
+		<% end %>
+		<hr>
 	<% end %>
-	<hr>
 <% end %>
