@@ -11,6 +11,20 @@ class CommentsController < ApplicationController
 		redirect_to post_path(@post)
 	end
 
+	def reply
+		@post = Post.find(params[:post_id])
+		@comment = Comment.find(params[:id])
+		@reply = Comment.new(comment_params)
+		@reply.user = current_user
+		@reply.post = @post
+		@reply.reply = @comment
+		if @reply.save
+			redirect_to post_path(@post)
+		else
+			redirect_to post_path(@post)
+		end
+	end
+
 	private
 
 	def comment_params

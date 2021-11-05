@@ -18,11 +18,30 @@
 
 <% if @post.comments.present? %>
 	<h4>Komentar</h4>
-	<% @post.comments.each do |comments| %>
-		Name: <%= comments.user.name %>
-		<br>
-		Comment: <%= comments.comment %>
-		<br>
+	<% @post.comments.each do |comment| %>
+		<% if comment.reply_id.present? == false %>
+			Name: <%= comment.user.name %>
+			<br>
+			Comment: <%= comment.comment %>
+			<br>
+			<%= form_for @comment, url: reply_post_comment_path(@post, comment) do |f| %>
+				<%= f.text_area :comment %>
+				<br>
+				<%= f.submit 'Reply' %>
+			<% end %>
+			<br>
+			<% if comment.replys.present? %>
+				replies: <br> 
+				<% comment.replys.each do |reply| %>
+					Name: <%= reply.user.name %>
+					<br>
+					Comment: <%= reply.comment %>
+					<br>
+				<% end %>
+			<% end %>
+			======
+			<br>
+		<% end %>
 	<% end %>
 <% end %>
 <br>
