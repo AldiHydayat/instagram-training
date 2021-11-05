@@ -19,7 +19,7 @@
 		<%= link_to "Lainnya", post_path(post.id) %>
 	<% end %>
 	<br>
-	<%= link_to "#{post.get_likes.size} Likes", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
+	<%= link_to "#{pluralize(post.get_likes.size, 'Like')}", like_post_path(post.id), method: :put %> | <%= link_to "Comments", post_path(post.id) %>
 	<% unless post.repost_id.present? %>
 		| <%= link_to "Bagikan", repost_post_path(post), method: :post %>
 	<% end %>

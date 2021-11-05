@@ -16,4 +16,16 @@ class FollowsController < ApplicationController
             redirect_to user_post_path(@following)
         end
     end
+
+    def follower
+        @user = User.find(params[:id])
+
+        @followers = @user.followers
+    end
+
+    def following
+        @user = User.find(params[:id])
+
+        @followings = @user.followings
+    end
 end

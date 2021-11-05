@@ -1,0 +1,9 @@
+<ul>
+    <% if @followers.present? %>
+        <% @followers.each do |follower| %>
+            <li><%= link_to follower.follower.name.capitalize, user_post_path(follower.follower) %></li>
+        <% end %>
+    <% else %>
+        <%= "#{@user.name} belum memiliki followers".capitalize %>
+    <% end %>
+</ul>

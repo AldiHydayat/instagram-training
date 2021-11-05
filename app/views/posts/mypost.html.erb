@@ -1,6 +1,6 @@
-Followers <%= @posts.first.user.followers.count %>
+<%= pluralize(@posts.first.user.followers.count, "Follower") %> | <%= link_to "Lihat Followers", followers_user_path(@posts.first.user) %>
 <br>
-Followers <%= @posts.first.user.followings.count %>
+<%= pluralize(@posts.first.user.followings.count, "Following") %> | <%= link_to "Lihat Followings", followings_user_path(@posts.first.user) %>
 <br>
 <% if @posts.present? %>
 	<%= render 'show_posts', posts: @posts %>
