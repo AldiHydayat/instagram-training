@@ -10,7 +10,7 @@ upcase downcase v
 urutan posting v
 pluralize v
 hilangkn share jika post sebuah repost v
-tampilkan caption 10 karakter pertama
+tampilkan caption 10 karakter pertama v
 reply comment
 private dan public account approve
 follow show followers
