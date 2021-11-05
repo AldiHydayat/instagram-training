@@ -1,4 +1,5 @@
 <%= link_to @post.user.name, user_post_path(@post.user) %>
+<%= link_to 'Follow', follow_user_path(@post.user), method: :post %>
 <br>
 <% @post.file_post.each do |f| %>
 	<%= image_tag(f.url, width: "350", height: "250") %>

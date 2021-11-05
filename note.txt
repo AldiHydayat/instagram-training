@@ -13,6 +13,6 @@ hilangkn share jika post sebuah repost v
 tampilkan caption 10 karakter pertama v
 reply comment v
 private dan public account approve
-follow show followers
+follow show followers | user_id, followed_id, is_approved | v
 block
 friendly id

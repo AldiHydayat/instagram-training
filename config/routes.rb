@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   root "posts#index"
 
+  post "/users/:id/follow", to: "follows#follow", as: "follow_user"
   resources :posts do
   	resources :comments, only: [:create] do
 		member do 
