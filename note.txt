@@ -9,10 +9,11 @@ pake array join to_sentences v ( mengubah array menjadi kalimat )
 upcase downcase v
 urutan posting v - ( created_at: :desc ) -
 pluralize v ( Like, Follow )
-hilangkn share jika post sebuah repost v
+hilangkan share jika post sebuah repost v
 tampilkan caption 10 karakter pertama v ( truncate )
 reply comment v
-follow show followers | follower_id, following_id, is_approved | v
-private dan public account approve
+follow show followers | table_name: follow, follower_id, following_id, is_approved | v
+private dan public account approve ( tinggal approve )
+jangan tampilkan repost dari akun private v
 block
 friendly id
