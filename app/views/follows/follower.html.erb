@@ -1,9 +1,19 @@
 <ul>
-    <% if @followers.present? %>
-        <% @followers.each do |follower| %>
-            <li><%= link_to follower.follower.name.capitalize, user_post_path(follower.follower) %></li>
+  <% if @followers.present? %>
+    <% @followers.each do |follow| %>
+      <li>
+        <%= link_to follow.follower.name.capitalize, user_post_path(follow.follower) %>
+        <% if follow.following.is_private && follow.following == current_user %>
+          |
+          <% if follow.is_approved %>
+            <%= link_to 'Batal Izinkan', approve_follower_path(follow), method: :put %>
+          <% else %>
+            <%= link_to 'Izinkan', approve_follower_path(follow), method: :put %>
+          <% end %>
         <% end %>
-    <% else %>
-        <%= "#{@user.name} belum memiliki followers".capitalize %>
-    <% end %>
+      <% end %>
+    </li>
+  <% else %>
+    <%= "#{@user.name} belum memiliki followers".capitalize %>
+  <% end %>
 </ul>

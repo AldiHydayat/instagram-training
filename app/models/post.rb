@@ -29,12 +29,16 @@ class Post < ApplicationRecord
     posts = posts.select do |post|
       next true if post.repost.blank?
 
-      post.repost.user.is_private == 0
+      !post.repost.user.is_private
     end
   end
 
   def self.repost(post, user)
     repost = Post.new(repost: post, user: user)
     repost.save
+  end
+
+  def self.get_by_user(user, current_user)
+    return user.posts.order(created_at: :desc) if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present?
   end
 end

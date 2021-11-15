@@ -12,4 +12,9 @@ class Follow < ApplicationRecord
       errors.add(:following_id, "can't follow self")
     end
   end
+
+  def approve_toggle
+    self.is_approved = !is_approved
+    save
+  end
 end

@@ -1,10 +1,10 @@
-<%= pluralize(@user.followers.count, "Follower") %> | <%= link_to "Lihat Followers", followers_user_path(@user) %>
+<%= pluralize(@user.followers.count, "Follower") %> | <%= link_to "Lihat Followers", followers_user_path(@user) %> <%= @user.is_private && @user == current_user ? "Akun anda private silahkan izinkan followers anda" : "" %>
 <br>
 <%= pluralize(@user.followings.count, "Following") %> | <%= link_to "Lihat Followings", followings_user_path(@user) %>
 <br>
 <% if @posts.present? %>
   <%= render 'show_posts', posts: @posts %>
-<% elsif @user.is_private == 1 %>
+<% elsif @user.is_private %>
   <%= "Akun diprivate" %>
 <% else %>
   <h3>Belum posting apapun</h3>

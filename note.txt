@@ -13,7 +13,7 @@ hilangkan share jika post sebuah repost v
 tampilkan caption 10 karakter pertama v ( truncate )
 reply comment v
 follow show followers | table_name: follow, follower_id, following_id, is_approved | v
-private dan public account approve ( tinggal approve )
+private dan public account approve v
 jangan tampilkan repost dari akun private v
 block
-friendly id
+friendly id v

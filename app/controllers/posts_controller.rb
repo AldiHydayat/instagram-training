@@ -55,7 +55,7 @@ class PostsController < ApplicationController
 
   def get_by_user
     @user = User.friendly.find(params[:id])
-    @posts = Post.joins(:user).where(users: { is_private: 0, slug: params[:id] }).order(created_at: :desc)
+    @posts = Post.get_by_user(@user, current_user)
     render "mypost"
   end
 
