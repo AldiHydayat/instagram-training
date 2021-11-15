@@ -1,4 +1,5 @@
 class Post < ApplicationRecord
+  extend FriendlyId
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :reposts, class_name: "Post", foreign_key: "repost_id", dependent: :destroy
@@ -9,14 +10,10 @@ class Post < ApplicationRecord
 
   mount_uploaders :file_post, PostUploader
   acts_as_votable
+  friendly_id :file_post, use: :slugged
 
   def is_repost?
     repost_id.blank?
-  end
-
-  def change_user(user__id)
-    self.user_id = user__id
-    save
   end
 
   def like_toggle(user)

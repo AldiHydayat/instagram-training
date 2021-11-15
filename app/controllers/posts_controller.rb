@@ -24,7 +24,7 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id])
+    @post = Post.friendly.find(params[:id])
     @comment = Comment.new
   end
 
@@ -37,8 +37,8 @@ class PostsController < ApplicationController
   def destroy
   end
 
-  def like
-    @post = Post.find(params[:id])
+  def like_toggle
+    @post = Post.friendly.find(params[:id])
     @post.like_toggle(current_user)
     redirect_to root_path
   end
@@ -54,13 +54,13 @@ class PostsController < ApplicationController
   end
 
   def get_by_user
-    @user = User.find(params[:id])
-    @posts = Post.joins(:user).where(users: { id: params[:id], is_private: 0 }).order(created_at: :desc)
+    @user = User.friendly.find(params[:id])
+    @posts = Post.joins(:user).where(users: { is_private: 0, slug: params[:id] }).order(created_at: :desc)
     render "mypost"
   end
 
   def repost
-    @original_post = Post.find(params[:id])
+    @original_post = Post.friendly.find(params[:id])
 
     @repost = Post.repost(@original_post, current_user)
     redirect_to root_path

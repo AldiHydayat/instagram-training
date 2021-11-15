@@ -7,22 +7,22 @@ Rails.application.routes.draw do
   get "/users/:id/followings", to: "follows#following", as: "followings_user"
 
   resources :posts do
-  	resources :comments, only: [:create] do
-		member do 
-			post "reply" => "comments#reply"
-		end
-	end
+    resources :comments, only: [:create] do
+      member do
+        post "reply" => "comments#reply"
+      end
+    end
 
-  	member do 
-  		put "like" => "posts#like"
-		get "user" => "posts#get_by_user"
-		post "repost" => "posts#repost"
-  	end
+    member do
+      put "like_toggle" => "posts#like_toggle"
+      get "user" => "posts#get_by_user"
+      post "repost" => "posts#repost"
+    end
 
-  	collection do
-  		get "like" => "posts#liked"
-		get "mypost" => "posts#mypost"
-  	end
+    collection do
+      get "like" => "posts#liked"
+      get "mypost" => "posts#mypost"
+    end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
