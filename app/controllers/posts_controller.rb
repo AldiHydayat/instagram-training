@@ -1,11 +1,11 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :like, :mypost, :repost, :liked]
+  before_action :authenticate_user!, except: [:index, :show, :get_by_user]
 
   def index
     if params[:keyword].present?
       @users = User.where("name like ?", "%#{params[:keyword]}%").order(created_at: :desc)
     else
-      @posts = Post.public_posts
+      @posts = Post.public_posts(current_user)
     end
   end
 
@@ -55,14 +55,14 @@ class PostsController < ApplicationController
 
   def get_by_user
     @user = User.friendly.find(params[:id])
-    @posts = Post.get_by_user(@user, current_user)
+    @posts = Post.get_by_user(@user, current_user) if @user.blocks.where(blocked_user: current_user).blank? || @user == current_user
     render "mypost"
   end
 
   def repost
     @original_post = Post.friendly.find(params[:id])
 
-    @repost = Post.repost(@original_post, current_user)
+    Post.repost(@original_post, current_user)
     redirect_to root_path
   end
 

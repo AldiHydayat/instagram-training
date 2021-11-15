@@ -24,12 +24,21 @@ class Post < ApplicationRecord
     end
   end
 
-  def self.public_posts
+  def self.public_posts(current_user)
     posts = Post.joins(:user).where(users: { is_private: 0 }).order(created_at: :desc)
-    posts = posts.select do |post|
-      next true if post.repost.blank?
 
-      !post.repost.user.is_private
+    # jika tidak login
+    return posts if current_user.nil?
+
+    posts.select do |post|
+      # skip dengan return false jika user diblock
+      next false if current_user.blocks.where(blocked_user: post.user).present?
+
+      # skip dengan true jika bukan repost
+      next true if post.repost.blank? || post.user == current_user
+
+      # menyeleksi repost yang usernya public dan current user tidak diblock
+      !post.repost.user.is_private && current_user.blocks.where(blocked_user: post.repost.user).blank?
     end
   end
 

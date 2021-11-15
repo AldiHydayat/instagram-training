@@ -8,7 +8,7 @@ class Follow < ApplicationRecord
   validate :cannot_self_follow
 
   def cannot_self_follow
-    if follower_id == following_id
+    if follower_id.eql? following_id
       errors.add(:following_id, "can't follow self")
     end
   end

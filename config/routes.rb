@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get "/users/:id/followers", to: "follows#follower", as: "followers_user"
   get "/users/:id/followings", to: "follows#following", as: "followings_user"
   put "/users/:id/approve", to: "follows#approve_toggle", as: "approve_follower"
+  post "/users/:id/block", to: "blocks#block_toggle", as: "block_user"
+  get "/users/blocks", to: "blocks#blocked_user", as: "blocks"
 
   resources :posts do
     resources :comments, only: [:create] do

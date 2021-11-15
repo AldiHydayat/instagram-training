@@ -4,16 +4,14 @@
     <title>InstagramTraining</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
   <body>
     <%= link_to 'Home', root_path %>
     <br>
     <% if user_signed_in? %>
-      <%= link_to '+ Posting',new_post_path %> | <%= link_to 'Postingan Saya', mypost_posts_path %> | <%= link_to 'Disukai', like_posts_path %> | <%= link_to "Profil - #{current_user.name}", edit_user_registration_path %> | <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+      <%= link_to '+ Posting',new_post_path %> | <%= link_to 'Postingan Saya', mypost_posts_path %> | <%= link_to 'Disukai', like_posts_path %> | <%= link_to "Profil - #{current_user.name}", edit_user_registration_path %> | <%= link_to "Block List", blocks_path %> | <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
     <% else %>
       <%= link_to 'Login', new_user_session_path %> | <%= link_to 'Daftar', new_user_registration_path %>
     <% end %>

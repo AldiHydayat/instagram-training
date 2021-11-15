@@ -13,6 +13,9 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :followers, class_name: "Follow", foreign_key: :following_id, dependent: :destroy
   has_many :followings, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy
+  has_many :blocks, dependent: :destroy
+  has_many :blocked_users, class_name: "Block", foreign_key: :blocked_user_id, dependent: :destroy
+
   acts_as_voter
   friendly_id :name, use: :slugged
 end

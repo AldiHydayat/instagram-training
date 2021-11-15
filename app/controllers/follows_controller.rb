@@ -1,5 +1,5 @@
 class FollowsController < ApplicationController
-  before_action :authenticate_user!, only: [:follow]
+  before_action :authenticate_user!, only: [:follow, :approve_toggle]
 
   def follow
     @user = current_user

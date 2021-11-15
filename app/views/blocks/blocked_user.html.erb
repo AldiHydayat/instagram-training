@@ -1,0 +1,13 @@
+<ul>
+  <% if @blocks.present? %>
+    <% @blocks.each do |block| %>
+      <li>
+        <%= link_to block.blocked_user.name, user_post_path(block.blocked_user) %>
+        |
+        <%= link_to 'Batal Blokir', block_user_path(block.blocked_user), method: :post %>
+      </li>
+    <% end %>
+  <% else %>
+    block list kosong
+  <% end %>
+</ul>

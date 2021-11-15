@@ -2,10 +2,20 @@
 <br>
 <%= pluralize(@user.followings.count, "Following") %> | <%= link_to "Lihat Followings", followings_user_path(@user) %>
 <br>
+<% if @user != current_user && user_signed_in? %>
+  <% if current_user.blocks.where(blocked_user: @user).blank? %>
+    <%= link_to 'Blokir', block_user_path(@user) , method: :post %>
+  <% else %>
+    <%= link_to 'Batal Blokir', block_user_path(@user) , method: :post %>
+  <% end %>
+<% end %>
+<br>
 <% if @posts.present? %>
   <%= render 'show_posts', posts: @posts %>
 <% elsif @user.is_private %>
   <%= "Akun diprivate" %>
+<% elsif @user.blocks.where(blocked_user: current_user).present? %>
+  <h3>Akun anda diblokir <%= @user.name %></h3>
 <% else %>
   <h3>Belum posting apapun</h3>
 <% end %>
