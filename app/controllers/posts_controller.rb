@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :get_by_user]
+  before_action :set_post, except: [:index, :new, :create]
 
   def index
     if params[:keyword].present?
@@ -24,7 +25,6 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.friendly.find(params[:id])
     @comment = Comment.new
   end
 
@@ -38,7 +38,6 @@ class PostsController < ApplicationController
   end
 
   def like_toggle
-    @post = Post.friendly.find(params[:id])
     @post.like_toggle(current_user)
     redirect_to root_path
   end
@@ -55,18 +54,21 @@ class PostsController < ApplicationController
 
   def get_by_user
     @user = User.friendly.find(params[:id])
-    @posts = Post.get_by_user(@user, current_user) if @user.blocks.where(blocked_user: current_user).blank? || @user == current_user
+    @posts = Post.get_by_user(@user, current_user) if @user.blocks.where(blocked_user: current_user).blank?
     render "mypost"
   end
 
   def repost
-    @original_post = Post.friendly.find(params[:id])
-
-    Post.repost(@original_post, current_user)
+    Post.repost(@post, current_user)
     redirect_to root_path
   end
 
   private
+
+  # Callback
+  def set_post
+    @post = Post.friendly.find(params[:id])
+  end
 
   def post_params
     params.require(:post).permit(:caption, { file_post: [] })

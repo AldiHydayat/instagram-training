@@ -25,29 +25,29 @@ class Post < ApplicationRecord
   end
 
   def self.public_posts(current_user)
-    posts = Post.joins(:user).where(users: { is_private: 0 }).order(created_at: :desc)
+    posts = includes(:user).where(users: { is_private: 0 }).order(created_at: :desc)
 
     # jika tidak login
     return posts if current_user.nil?
 
     posts.select do |post|
-      # skip dengan return false jika user diblock
-      next false if current_user.blocks.where(blocked_user: post.user).present?
+      # skip dengan return false jika current_user diblock atau current_user memblokir
+      next false if current_user.blocks.where(blocked_user: post.user).present? || post.user.blocks.where(blocked_user: current_user).present?
 
       # skip dengan true jika bukan repost
-      next true if post.repost.blank? || post.user == current_user
+      next true if post.repost.blank?
 
-      # menyeleksi repost yang usernya public dan current user tidak diblock
-      !post.repost.user.is_private && current_user.blocks.where(blocked_user: post.repost.user).blank?
+      # menyeleksi repost yang usernya public dan current user tidak diblock dan tidak memblokir
+      !post.repost.user.is_private
     end
   end
 
   def self.repost(post, user)
-    repost = Post.new(repost: post, user: user)
+    repost = new(repost: post, user: user)
     repost.save
   end
 
   def self.get_by_user(user, current_user)
-    return user.posts.order(created_at: :desc) if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present?
+    return user.posts.order(created_at: :desc) if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present? || user == current_user
   end
 end

@@ -1,13 +1,18 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { passwords: "users/passwords" }
   root "posts#index"
 
-  post "/users/:id/follow", to: "follows#follow", as: "follow_user"
-  get "/users/:id/followers", to: "follows#follower", as: "followers_user"
-  get "/users/:id/followings", to: "follows#following", as: "followings_user"
-  put "/users/:id/approve", to: "follows#approve_toggle", as: "approve_follower"
-  post "/users/:id/block", to: "blocks#block_toggle", as: "block_user"
-  get "/users/blocks", to: "blocks#blocked_user", as: "blocks"
+  scope controller: :follows do
+    post "/users/:id/follow" => :follow, as: "follow_user"
+    get "/users/:id/followers" => :follower, as: "followers_user"
+    get "/users/:id/followings" => :following, as: "followings_user"
+    put "/users/:id/approve" => :approve_toggle, as: "approve_follower"
+  end
+
+  scope controller: :blocks do
+    post "/users/:id/block" => :block_toggle, as: "block_user"
+    get "/users/blocks" => :blocked_user, as: "blocks"
+  end
 
   resources :posts do
     resources :comments, only: [:create] do
