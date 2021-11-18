@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   root "posts#index"
 
   scope controller: :follows do
-    post "/users/:id/follow" => :follow, as: "follow_user"
-    get "/users/:id/followers" => :follower, as: "followers_user"
-    get "/users/:id/followings" => :following, as: "followings_user"
-    put "/users/:id/approve" => :approve_toggle, as: "approve_follower"
+    post "/follow/:id" => :follow, as: "follow_user"
+    get "/follow/:id/followers" => :follower, as: "followers_user"
+    get "/follow/:id/followings" => :following, as: "followings_user"
+    put "/follow/:id/approve" => :approve_toggle, as: "approve_follower"
   end
 
   scope controller: :blocks do

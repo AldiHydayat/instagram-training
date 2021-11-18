@@ -3,6 +3,9 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   extend FriendlyId
 
+  before_create :titleize_name
+  before_save :titleize_name
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
@@ -18,4 +21,10 @@ class User < ApplicationRecord
 
   acts_as_voter
   friendly_id :name, use: :slugged
+
+  private
+
+  def titleize_name
+    self.name = name.titleize
+  end
 end

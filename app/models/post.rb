@@ -2,8 +2,8 @@ class Post < ApplicationRecord
   extend FriendlyId
   belongs_to :user
   has_many :comments, dependent: :destroy
-  has_many :reposts, class_name: "Post", foreign_key: "repost_id", dependent: :destroy
-  belongs_to :repost, class_name: "Post", optional: true
+  has_many :reposts, class_name: 'Post', foreign_key: 'repost_id', dependent: :destroy
+  belongs_to :repost, class_name: 'Post', optional: true
 
   validates :file_post, :caption, presence: true, if: :is_repost?
   serialize :file_post, Array
@@ -11,10 +11,6 @@ class Post < ApplicationRecord
   mount_uploaders :file_post, PostUploader
   acts_as_votable
   friendly_id :file_post, use: :slugged
-
-  def is_repost?
-    repost_id.blank?
-  end
 
   def like_toggle(user)
     if user.liked? self
@@ -25,21 +21,33 @@ class Post < ApplicationRecord
   end
 
   def self.public_posts(current_user)
-    posts = includes(:user).where(users: { is_private: 0 }).order(created_at: :desc)
+    if current_user
+      # jika login
+      block_list = []
 
-    # jika tidak login
-    return posts if current_user.nil?
+      current_user.blocks.pluck(:blocked_user_id).each { |val| block_list << val }
 
-    posts.select do |post|
-      # skip dengan return false jika current_user diblock atau current_user memblokir
-      next false if current_user.blocks.where(blocked_user: post.user).present? || post.user.blocks.where(blocked_user: current_user).present?
+      current_user.blocked_users.pluck(:user_id).each { |val| block_list << val }
 
-      # skip dengan true jika bukan repost
-      next true if post.repost.blank?
+      user = User.includes(:followers).where('users.is_private = ? or users.id = ?', false, current_user)
+                 .or(includes(:followers).where(follows: { follower_id: current_user, is_approved: true }))
 
-      # menyeleksi repost yang usernya public dan current user tidak diblock dan tidak memblokir
-      !post.repost.user.is_private
+      # menseleksi lagi jika block list tidak kosong
+      user = user.where('users.id not in (?)', block_list) if block_list.present?
+
+      filter_post(user)
+      # jika tidak login
+    else
+      user = User.where(is_private: false)
+
+      filter_post(user)
     end
+
+    # posts = includes(user: [:blocks])
+    #   .where(users: { is_private: false })
+    #   .where.not(blocks: { blocked_user_id: current_user })
+    #   .or(includes(user: [:blocks]).where(blocks: { blocked_user_id: nil }))
+    #   .references(:users)
   end
 
   def self.repost(post, user)
@@ -48,6 +56,23 @@ class Post < ApplicationRecord
   end
 
   def self.get_by_user(user, current_user)
-    return user.posts.order(created_at: :desc) if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present? || user == current_user
+    return user.posts.order(created_at: :desc) if !user.is_private || user.followers.where(follower: current_user,
+                                                                                           is_approved: true).present? || user == current_user
+  end
+
+  private
+
+  def is_repost?
+    repost_id.blank?
+  end
+
+  def self.filter_post(user)
+    posts = where(user_id: user.pluck(:id))
+
+    posts.select do |post|
+      next true if post.repost.blank?
+
+      !post.repost.user.is_private
+    end
   end
 end

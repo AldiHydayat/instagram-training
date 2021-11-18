@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :get_by_user]
-  before_action :set_post, except: [:index, :new, :create]
+  before_action :set_post, except: [:index, :new, :create, :mypost, :get_by_user]
 
   def index
     if params[:keyword].present?
