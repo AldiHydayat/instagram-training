@@ -7,14 +7,12 @@ class FollowsController < ApplicationController
     @follow = Follow.find_by(follower: @user, following: @following)
 
     if @follow.present?
-      @follow.destroy
-      @follow.save
-      redirect_to user_post_path(@following)
+      @follow.unfollow
     else
-      @follow = Follow.new(follower: @user, following: @following)
-      @follow.save
-      redirect_to user_post_path(@following)
+      Follow.follow_user(@user, @following)
     end
+
+    redirect_to user_post_path(@following)
   end
 
   def follower

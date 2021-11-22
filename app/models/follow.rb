@@ -13,6 +13,15 @@ class Follow < ApplicationRecord
     end
   end
 
+  def self.follow_user(user, following)
+    create(follower: user, following: following)
+  end
+
+  def unfollow
+    destroy
+    save
+  end
+
   def approve_toggle
     self.is_approved = !is_approved
     save

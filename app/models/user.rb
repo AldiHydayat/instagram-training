@@ -22,6 +22,26 @@ class User < ApplicationRecord
   acts_as_voter
   friendly_id :name, use: :slugged
 
+  scope :public_users, -> { where(is_private: false) }
+
+  def block_list
+    list = []
+    blocks.pluck(:blocked_user_id).each { |val| list << val unless list.include?(val) }
+    blocked_users.pluck(:user_id).each { |val| list << val unless list.include?(val) }
+    list
+    # mengembalikan id user yang diblock dan memblokir
+  end
+
+  def self.available_user(current_user, list)
+    # mengembalikan user yang public atau sudah di approve
+    users = includes(:followers).where("users.is_private = ? or users.id = ?", false, current_user)
+      .or(includes(:followers).where(follows: { follower_id: current_user, is_approved: true }))
+
+    users = users.where("users.id not in (?)", list) if list.present?
+
+    users
+  end
+
   private
 
   def titleize_name

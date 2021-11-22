@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :get_by_user]
-  before_action :set_post, except: [:index, :new, :create, :mypost, :get_by_user]
+  before_action :authenticate_user!, except: %i[index show get_by_user]
+  before_action :set_post, except: %i[index new create mypost get_by_user liked]
 
   def index
     if params[:keyword].present?
@@ -28,14 +28,11 @@ class PostsController < ApplicationController
     @comment = Comment.new
   end
 
-  def edit
-  end
+  def edit; end
 
-  def update
-  end
+  def update; end
 
-  def destroy
-  end
+  def destroy; end
 
   def like_toggle
     @post.like_toggle(current_user)

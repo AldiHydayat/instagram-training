@@ -17,3 +17,6 @@ private dan public account approve v
 jangan tampilkan repost dari akun private v
 block v
 friendly id v
+auto unfollow saat blokir v
+arsip, simpan menggunakan 1 tabel dengan enum.
+hapus postingan.

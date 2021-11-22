@@ -2,8 +2,8 @@ class Post < ApplicationRecord
   extend FriendlyId
   belongs_to :user
   has_many :comments, dependent: :destroy
-  has_many :reposts, class_name: 'Post', foreign_key: 'repost_id', dependent: :destroy
-  belongs_to :repost, class_name: 'Post', optional: true
+  has_many :reposts, class_name: "Post", foreign_key: "repost_id", dependent: :destroy
+  belongs_to :repost, class_name: "Post", optional: true
 
   validates :file_post, :caption, presence: true, if: :is_repost?
   serialize :file_post, Array
@@ -21,33 +21,19 @@ class Post < ApplicationRecord
   end
 
   def self.public_posts(current_user)
+    block_list = []
+
     if current_user
       # jika login
-      block_list = []
+      block_list = current_user.block_list
 
-      current_user.blocks.pluck(:blocked_user_id).each { |val| block_list << val }
-
-      current_user.blocked_users.pluck(:user_id).each { |val| block_list << val }
-
-      user = User.includes(:followers).where('users.is_private = ? or users.id = ?', false, current_user)
-                 .or(includes(:followers).where(follows: { follower_id: current_user, is_approved: true }))
-
-      # menseleksi lagi jika block list tidak kosong
-      user = user.where('users.id not in (?)', block_list) if block_list.present?
-
-      filter_post(user)
-      # jika tidak login
+      users = User.available_user(current_user, block_list)
     else
-      user = User.where(is_private: false)
-
-      filter_post(user)
+      # jika tidak login
+      users = User.public_users
     end
 
-    # posts = includes(user: [:blocks])
-    #   .where(users: { is_private: false })
-    #   .where.not(blocks: { blocked_user_id: current_user })
-    #   .or(includes(user: [:blocks]).where(blocks: { blocked_user_id: nil }))
-    #   .references(:users)
+    filter_post(users, current_user, block_list)
   end
 
   def self.repost(post, user)
@@ -56,8 +42,13 @@ class Post < ApplicationRecord
   end
 
   def self.get_by_user(user, current_user)
-    return user.posts.order(created_at: :desc) if !user.is_private || user.followers.where(follower: current_user,
-                                                                                           is_approved: true).present? || user == current_user
+    if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present? || user == current_user
+      user.posts.order(created_at: :desc)
+    end
+  end
+
+  def is_repost_user_approved?(current_user)
+    repost.user.followers.where(follower_id: current_user, is_approved: true).present?
   end
 
   private
@@ -66,12 +57,19 @@ class Post < ApplicationRecord
     repost_id.blank?
   end
 
-  def self.filter_post(user)
-    posts = where(user_id: user.pluck(:id))
+  def self.filter_post(users, current_user, block_list = [])
+    posts = where(user_id: users.pluck(:id)).order(created_at: :desc)
 
     posts.select do |post|
       next true if post.repost.blank?
 
+      # false jika repost.user masuk block_list
+      next false if block_list.include?(post.repost.user.id)
+
+      # true jika repost.user sudah difollow current_user dan diapprove
+      next true if post.is_repost_user_approved?(current_user)
+
+      # check jika repost.user tidak private
       !post.repost.user.is_private
     end
   end
