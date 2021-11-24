@@ -1,0 +1,27 @@
+<%= link_to post.user.name, user_post_path(post.user) %>
+<% if post.user.followers.where(follower: current_user).present? && post.user != current_user %>
+  |
+  <%= link_to 'Unfollow', follow_user_path(post.user), method: :post %>
+<% elsif post.user != current_user %>
+  |
+  <%= link_to 'Follow', follow_user_path(post.user), method: :post %>
+<% end %>
+<% if post.repost_id.present? %>
+  shared from
+  <%= link_to post.repost.user.name, user_post_path(post.repost.user) %>
+<% end %>
+<% if post.user == current_user %>
+  | <%= link_to 'Hapus Postingan', post_path(post), method: :delete, data: { confirm: "Are You Sure?" } %>
+  <% if Archive.get_archived_post(current_user).pluck(:post_id).include?(post.id) %>
+    | <%= link_to 'Batal Arsipkan', archive_path(post.archives.find_by(post: post, status: :archive)), method: :delete, data: { confirm: "Are You Sure?" } %>
+  <% else %>
+    | <%= link_to 'Arsipkan', archive_post_path(post), method: :put %>
+  <% end %>
+<% end %>
+<% if user_signed_in? %>
+  <% if Archive.get_saved_post(current_user).pluck(:post_id).include?(post.id) %>
+    | <%= link_to 'Batal Simpan', archive_path(post.archives.find_by(user: current_user)), method: :delete, data: { confirm: "Are You Sure?" } %>
+  <% else %>
+    | <%= link_to 'Simpan', save_post_path(post), method: :post %>
+  <% end %>
+<% end %>

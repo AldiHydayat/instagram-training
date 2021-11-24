@@ -8,6 +8,7 @@ class ArchivesController < ApplicationController
 
   def saved_post
     @archives = Archive.get_saved_post(current_user)
+    render "index"
   end
 
   # get id archive

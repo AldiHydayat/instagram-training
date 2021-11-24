@@ -1,0 +1,28 @@
+<% if user_signed_in? %>
+  <%= render "comment_form", new_comment: new_comment, post: post %>
+<% end %>
+<% if post.comments.present? %>
+  <h4>Komentar</h4>
+  <% post.comments.each do |comment| %>
+    <% if comment.reply_id.present? == false %>
+      Name: <%= comment.user.name %>
+      <br>
+      Comment: <%= comment.comment %>
+      <br>
+      <%= render "reply_comment_form", new_comment: new_comment, post: post, comment: comment %>
+      <br>
+      <% if comment.replies.present? %>
+        replies: <br>
+        <% comment.replies.each do |reply| %>
+          Name: <%= reply.user.name %>
+          <br>
+          Comment: <%= reply.comment %>
+          <br>
+        <% end %>
+      <% end %>
+      ======
+      <br>
+    <% end %>
+  <% end %>
+<% end %>
+<hr>

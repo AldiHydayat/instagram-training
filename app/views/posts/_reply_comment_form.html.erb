@@ -1,0 +1,5 @@
+<%= form_for new_comment, url: reply_post_comment_path(post, comment) do |f| %>
+  <%= f.text_area :comment %>
+  <br>
+  <%= f.submit 'Reply' %>
+<% end %>

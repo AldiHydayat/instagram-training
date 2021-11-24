@@ -1,0 +1,9 @@
+<% post.file_post.each do |f| %>
+  <%= image_tag(f.url, width: "350", height: "250") %>
+<% end %>
+<br>
+<%= truncate(post.caption, length: 10) %>
+<% if post.caption.length >= 10 %>
+  <%= link_to "Lainnya", post_path(post) %>
+<% end %>
+<br>

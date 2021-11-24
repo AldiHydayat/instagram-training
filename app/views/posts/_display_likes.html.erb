@@ -1,0 +1,11 @@
+<% if post.votes_for.up.voters.present? %>
+  disukai oleh
+  <% if post.votes_for.up.voters.length == 1 %>
+    <%= post.votes_for.up.voters.first.name %>
+  <% elsif post.votes_for.up.voters.length == 2 %>
+    <%= post.votes_for.up.voters.pluck(:name).to_sentence(two_words_connector: " dan ") %>
+  <% elsif post.votes_for.up.voters.length > 2 %>
+    <%= post.votes_for.up.voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %>
+    dan lainnya
+  <% end %>
+<% end %>

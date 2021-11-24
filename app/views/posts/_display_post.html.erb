@@ -1,0 +1,19 @@
+<% if !post.is_archived || post.user == current_user %>
+  <% if post.repost.present? %>
+    <%= show_repost(post) %>
+  <% else %>
+    <%= render "posts/show_post", post: post %>
+  <% end %>
+  <% if post.repost.blank? || !post.repost.is_archived %>
+    <%= link_to "#{pluralize(post.get_likes.size, 'Like')}", like_toggle_post_path(post), method: :put %>
+    | <%= link_to "Comments", post_path(post) %>
+    <% if post.repost_id.blank? && !post.is_archived %>
+      | <%= link_to "Bagikan", repost_post_path(post), method: :post %>
+    <% end %>
+    <br>
+    <%= render "posts/display_likes", post: post %>
+  <% end %>
+<% else %>
+  Postingan tidak tersedia
+  <br>
+<% end %>
