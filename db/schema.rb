@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_031736) do
+ActiveRecord::Schema.define(version: 2021_11_22_075305) do
+
+  create_table "archives", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+  end
 
   create_table "blocks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -55,6 +63,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_031736) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "repost_id"
     t.string "slug"
+    t.boolean "is_archived", default: false
     t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 

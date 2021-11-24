@@ -1,10 +1,15 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show get_by_user]
   before_action :set_post, except: %i[index new create mypost get_by_user liked]
+  before_action :is_post_archive?, only: %i[show]
 
   def index
     if params[:keyword].present?
-      @users = User.where("name like ?", "%#{params[:keyword]}%").order(created_at: :desc)
+      @users = User.search_user(params[:keyword])
+      if current_user
+        block_list = current_user.block_list
+        @users = @users.where.not(id: block_list)
+      end
     else
       @posts = Post.public_posts(current_user)
     end
@@ -32,7 +37,11 @@ class PostsController < ApplicationController
 
   def update; end
 
-  def destroy; end
+  def destroy
+    @post.remove_file_post
+    @post.destroy
+    redirect_to mypost_posts_path
+  end
 
   def like_toggle
     @post.like_toggle(current_user)
@@ -46,7 +55,7 @@ class PostsController < ApplicationController
 
   def mypost
     @user = current_user
-    @posts = current_user.posts.order(created_at: :desc)
+    @posts = current_user.posts.where(is_archived: false).order(created_at: :desc)
   end
 
   def get_by_user
@@ -60,6 +69,16 @@ class PostsController < ApplicationController
     redirect_to root_path
   end
 
+  def archive_post
+    Archive.archive_post(@post)
+    redirect_to root_path
+  end
+
+  def save_post
+    Archive.save_post(@post, current_user)
+    redirect_to root_path
+  end
+
   private
 
   # Callback
@@ -69,5 +88,11 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:caption, { file_post: [] })
+  end
+
+  def is_post_archive?
+    if @post.is_archived && @post.user != current_user
+      redirect_back(fallback_location: root_path)
+    end
   end
 end

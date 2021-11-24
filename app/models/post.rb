@@ -3,6 +3,7 @@ class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :reposts, class_name: "Post", foreign_key: "repost_id", dependent: :destroy
+  has_many :archives, dependent: :destroy
   belongs_to :repost, class_name: "Post", optional: true
 
   validates :file_post, :caption, presence: true, if: :is_repost?
@@ -11,6 +12,8 @@ class Post < ApplicationRecord
   mount_uploaders :file_post, PostUploader
   acts_as_votable
   friendly_id :file_post, use: :slugged
+
+  scope :get_archived_post, ->(user) { where(user: user, is_archived: true) }
 
   def like_toggle(user)
     if user.liked? self
@@ -43,7 +46,7 @@ class Post < ApplicationRecord
 
   def self.get_by_user(user, current_user)
     if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present? || user == current_user
-      user.posts.order(created_at: :desc)
+      user.posts.where(is_archived: false).order(created_at: :desc)
     end
   end
 
@@ -58,7 +61,7 @@ class Post < ApplicationRecord
   end
 
   def self.filter_post(users, current_user, block_list = [])
-    posts = where(user_id: users.pluck(:id)).order(created_at: :desc)
+    posts = where(user_id: users.pluck(:id), is_archived: false).order(created_at: :desc)
 
     posts.select do |post|
       next true if post.repost.blank?

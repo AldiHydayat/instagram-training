@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :followings, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy
   has_many :blocks, dependent: :destroy
   has_many :blocked_users, class_name: "Block", foreign_key: :blocked_user_id, dependent: :destroy
+  has_many :archives, dependent: :destroy
 
   acts_as_voter
   friendly_id :name, use: :slugged
@@ -40,6 +41,10 @@ class User < ApplicationRecord
     users = users.where("users.id not in (?)", list) if list.present?
 
     users
+  end
+
+  def self.search_user(keyword)
+    @users = User.where("name like ?", "%#{keyword}%").order(created_at: :desc)
   end
 
   private

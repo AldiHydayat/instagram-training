@@ -19,7 +19,6 @@ class Follow < ApplicationRecord
 
   def unfollow
     destroy
-    save
   end
 
   def approve_toggle

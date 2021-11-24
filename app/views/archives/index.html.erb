@@ -1,0 +1,61 @@
+<% @archives.each do |archive| %>
+  <%= link_to archive.post.user.name, user_post_path(archive.post.user) %>
+  <% if archive.post.repost_id.present? %>
+    shared from
+    <%= link_to archive.post.repost.user.name, user_post_path(archive.post.repost.user) %>
+  <% end %>
+  | <%= link_to 'Hapus Postingan', post_path(archive.post), method: :delete, data: { confirm: "Are You Sure?" } %>
+  | <%= link_to 'Batal Arsipkan', archive_path(archive), method: :delete, data: { confirm: "Are You Sure?" } %>
+  <% if Archive.get_saved_post(current_user).pluck(:post_id).include?(archive.post.id) %>
+    | <%= link_to 'Batal Simpan', archive_path(archive), method: :delete, data: { confirm: "Are You Sure?" } %>
+  <% else %>
+    | <%= link_to 'Simpan', save_post_path(archive.post), method: :post %>
+  <% end %>
+  <br>
+  <!-- jika repost -->
+  <% if archive.post.repost.present? %>
+    <% if archive.post.repost.is_archived %>
+      Postingan tidak tersedia
+      <br>
+    <% else %>
+      <% archive.post.repost.file_post.each do |f| %>
+        <%= image_tag(f.url, width: "350", height: "250") %>
+      <% end %>
+      <br>
+      <%= truncate(archive.post.repost.caption, length: 10) %>
+      <% if archive.post.repost.caption.length >=10 %>
+        <%= link_to "Lainnya", post_path(archive.post.id) %>
+      <% end %>
+      <br>
+    <% end %>
+    <!-- jika bukan -->
+  <% else %>
+    <% archive.post.file_post.each do |f| %>
+      <%= image_tag(f.url, width: "350", height: "250") %>
+    <% end %>
+    <br>
+    <%= truncate(archive.post.caption, length: 10) %>
+    <% if archive.post.caption.length >= 10 %>
+      <%= link_to "Lainnya", post_path(archive.post) %>
+    <% end %>
+    <br>
+  <% end %>
+  <% if archive.post.repost.blank? || !archive.post.repost.is_archived %>
+    <%= link_to "#{pluralize(archive.post.get_likes.size, 'Like')}", like_toggle_post_path(archive.post), method: :put %>
+    |
+    <%= link_to "Comments", post_path(archive.post) %>
+    <br>
+    <% if archive.post.votes_for.up.voters.present? %>
+      disukai oleh
+      <% if archive.post.votes_for.up.voters.length == 1 %>
+        <%= archive.post.votes_for.up.voters.first.name %>
+      <% elsif archive.post.votes_for.up.voters.length == 2 %>
+        <%= archive.post.votes_for.up.voters.pluck(:name).to_sentence(two_words_connector: " dan ") %>
+      <% elsif archive.post.votes_for.up.voters.length > 2 %>
+        <%= archive.post.votes_for.up.voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %>
+        dan lainnya
+      <% end %>
+    <% end %>
+  <% end %>
+  <hr>
+<% end %>

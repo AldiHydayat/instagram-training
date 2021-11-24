@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!, only: %i[create reply]
 
   def create
-    @post = Post.find(params[:post_id])
+    @post = Post.friendly.find(params[:post_id])
     @comment = Comment.new(comment_params)
     @comment.user = current_user
     @comment.post = @post
@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
   end
 
   def reply
-    @post = Post.find(params[:post_id])
+    @post = Post.friendly.find(params[:post_id])
     @comment = Comment.find(params[:id])
     @reply = Comment.new(comment_params)
     @reply.user = current_user

@@ -1,29 +1,45 @@
 <% posts.each do |post| %>
-  <%= link_to post.user.name.capitalize, user_post_path(post.user) %>
+  <%= link_to post.user.name, user_post_path(post.user) %>
   <% if post.user.followers.where(follower: current_user).present? && post.user != current_user %>
     |
     <%= link_to 'Unfollow', follow_user_path(post.user), method: :post %>
-    <% elsif post.user != current_user %>
-      |
-      <%= link_to 'Follow', follow_user_path(post.user), method: :post %>
+  <% elsif post.user != current_user %>
+    |
+    <%= link_to 'Follow', follow_user_path(post.user), method: :post %>
+  <% end %>
+  <% if post.repost_id.present? %>
+    shared from
+    <%= link_to post.repost.user.name, user_post_path(post.repost.user) %>
+  <% end %>
+  <% if post.user == current_user %>
+    | <%= link_to 'Hapus Postingan', post_path(post), method: :delete, data: { confirm: "Are You Sure?" } %>
+    | <%= link_to 'Arsipkan', archive_post_path(post), method: :put %>
+  <% end %>
+  <% if user_signed_in? %>
+    <% if Archive.get_saved_post(current_user).pluck(:post_id).include?(post.id) %>
+      | <%= link_to 'Batal Simpan', archive_path(post.archives.find_by(user: current_user)), method: :delete, data: { confirm: "Are You Sure?" } %>
+    <% else %>
+      | <%= link_to 'Simpan', save_post_path(post), method: :post %>
     <% end %>
-    <% if post.repost_id.present? %>
-      shared from
-      <%= link_to post.repost.user.name.capitalize, user_post_path(post.repost.user) %>
-    <% end %>
-    <br>
-
-    <!-- jika repost -->
+  <% end %>
+  <br>
+  <!-- jika repost -->
+  <% if !post.is_archived || post.user == current_user %>
     <% if post.repost.present? %>
-      <% post.repost.file_post.each do |f| %>
-        <%= image_tag(f.url, width: "350", height: "250") %>
+      <% if post.repost.is_archived %>
+        Postingan tidak tersedia
+        <br>
+      <% else %>
+        <% post.repost.file_post.each do |f| %>
+          <%= image_tag(f.url, width: "350", height: "250") %>
+        <% end %>
+        <br>
+        <%= truncate(post.repost.caption, length: 10) %>
+        <% if post.repost.caption.length >=10 %>
+          <%= link_to "Lainnya", post_path(post.id) %>
+        <% end %>
+        <br>
       <% end %>
-      <br>
-      <%= truncate(post.repost.caption, length: 10) %>
-      <% if post.repost.caption.length >=10 %>
-        <%= link_to "Lainnya", post_path(post.id) %>
-      <% end %>
-      <br>
       <!-- jika bukan -->
     <% else %>
       <% post.file_post.each do |f| %>
@@ -31,32 +47,35 @@
       <% end %>
       <br>
       <%= truncate(post.caption, length: 10) %>
-      <% if post.caption.length >=10 %>
-        <%= link_to "Lainnya", post_path(post.id) %>
+      <% if post.caption.length >= 10 %>
+        <%= link_to "Lainnya", post_path(post) %>
       <% end %>
       <br>
     <% end %>
-
-    <%= link_to "#{pluralize(post.get_likes.size, 'Like')}", like_toggle_post_path(post), method: :put %>
-    |
-    <%= link_to "Comments", post_path(post) %>
-    <% if !post.repost_id.present? %>
+    <% if post.repost.blank? || !post.repost.is_archived %>
+      <%= link_to "#{pluralize(post.get_likes.size, 'Like')}", like_toggle_post_path(post), method: :put %>
       |
-      <%= link_to "Bagikan", repost_post_path(post), method: :post %>
-    <% end %>
-
-    <br>
-
-    <% if post.votes_for.up.voters.present? %>
-      disukai oleh
-      <% if post.votes_for.up.voters.length == 1 %>
-        <%= post.votes_for.up.voters.first.name %>
+      <%= link_to "Comments", post_path(post) %>
+      <% if post.repost_id.blank? && !post.is_archived %>
+        |
+        <%= link_to "Bagikan", repost_post_path(post), method: :post %>
+      <% end %>
+      <br>
+      <% if post.votes_for.up.voters.present? %>
+        disukai oleh
+        <% if post.votes_for.up.voters.length == 1 %>
+          <%= post.votes_for.up.voters.first.name %>
         <% elsif post.votes_for.up.voters.length == 2 %>
           <%= post.votes_for.up.voters.pluck(:name).to_sentence(two_words_connector: " dan ") %>
-          <% elsif post.votes_for.up.voters.length > 2 %>
-            <%= post.votes_for.up.voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %>
-            dan lainnya
-          <% end %>
+        <% elsif post.votes_for.up.voters.length > 2 %>
+          <%= post.votes_for.up.voters.pluck(:name)[0..1].to_sentence(two_words_connector: " dan ") %>
+          dan lainnya
         <% end %>
-        <hr>
       <% end %>
+    <% end %>
+  <% else %>
+    Postingan tidak tersedia
+    <br>
+  <% end %>
+  <hr>
+<% end %>

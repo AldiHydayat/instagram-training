@@ -25,11 +25,23 @@ Rails.application.routes.draw do
       put "like_toggle" => "posts#like_toggle"
       get "user" => "posts#get_by_user"
       post "repost" => "posts#repost"
+      put "archive" => "posts#archive_post"
+      post "save" => "posts#save_post"
     end
 
     collection do
       get "like" => "posts#liked"
       get "mypost" => "posts#mypost"
+    end
+  end
+
+  resources :archives, only: [:index, :destroy] do
+    member do
+      delete "unsave" => "archives#destroy_saved_post"
+    end
+
+    collection do
+      get "saved" => "archives#saved_post"
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
