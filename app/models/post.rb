@@ -23,7 +23,7 @@ class Post < ApplicationRecord
     end
   end
 
-  def self.public_posts(current_user)
+  def self.public_posts(current_user, page)
     block_list = []
 
     if current_user
@@ -36,7 +36,7 @@ class Post < ApplicationRecord
       users = User.public_users
     end
 
-    filter_post(users, current_user, block_list)
+    filter_post(users, current_user, block_list, page)
   end
 
   def self.repost(post, user)
@@ -44,9 +44,9 @@ class Post < ApplicationRecord
     repost.save
   end
 
-  def self.get_by_user(user, current_user)
+  def self.get_by_user(user, current_user, page)
     if !user.is_private || user.followers.where(follower: current_user, is_approved: true).present? || user == current_user
-      user.posts.where(is_archived: false).order(created_at: :desc)
+      user.posts.where(is_archived: false).order(created_at: :desc).page(page)
     end
   end
 
@@ -60,10 +60,10 @@ class Post < ApplicationRecord
     repost_id.blank?
   end
 
-  def self.filter_post(users, current_user, block_list = [])
+  def self.filter_post(users, current_user, block_list = [], page)
     posts = where(user_id: users.pluck(:id), is_archived: false).order(created_at: :desc)
 
-    posts.select do |post|
+    posts = posts.select do |post|
       next true if post.repost.blank?
 
       # false jika repost.user masuk block_list
@@ -75,5 +75,7 @@ class Post < ApplicationRecord
       # check jika repost.user tidak private
       !post.repost.user.is_private
     end
+
+    posts = where(id: posts.pluck(:id)).order(created_at: :desc).page(page)
   end
 end

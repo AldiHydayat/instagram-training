@@ -22,12 +22,14 @@
 <% end %>
 <br>
 <% if @posts.present? %>
-  <%= render "loop_posts", posts: @posts %>
+  <div class="posts-list">
+    <%= render "loop_posts", posts: @posts %>
+  </div>
+  <%= render 'paginator', posts: @posts %>
 <% elsif @user.is_private %>
   <%= "Akun diprivate" %>
 <% elsif @user.blocks.where(blocked_user: current_user).present? %>
-  <h3>Akun anda diblokir
-    <%= @user.name %></h3>
+  <h3>Akun anda diblokir <%= @user.name %></h3>
 <% else %>
   <h3>Belum posting apapun</h3>
 <% end %>

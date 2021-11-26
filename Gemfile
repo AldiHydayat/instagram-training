@@ -30,6 +30,8 @@ gem "acts_as_votable"
 
 gem "friendly_id"
 
+gem "kaminari"
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

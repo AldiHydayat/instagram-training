@@ -1,0 +1,7 @@
+<% @archives.each do |archive| %>
+  <%= render "posts/display_option", post: archive.post %>
+  <br>
+  <!-- jika repost -->
+  <%= render "posts/display_post", post: archive.post, status: :show_post %>
+  <hr>
+<% end %>

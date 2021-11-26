@@ -1,7 +1,4 @@
-<% @archives.each do |archive| %>
-  <%= render "posts/display_option", post: archive.post %>
-  <br>
-  <!-- jika repost -->
-  <%= render "posts/display_post", post: archive.post %>
-  <hr>
-<% end %>
+<div class="posts-list">
+  <%= render 'loop_posts' %>
+</div>
+<%= render "posts/paginator", posts: @archives %>

@@ -1,6 +1,6 @@
 <% posts.each do |post| %>
-  <%= render "display_option", post: post %>
+  <%= render "posts/display_option", post: post %>
   <br>
-  <%= render "display_post", post: post %>
+  <%= render "posts/display_post", post: post, status: :show_post %>
   <hr>
 <% end %>

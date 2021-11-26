@@ -1,5 +1,5 @@
 <%= render "display_option", post: @post %>
 <br>
 <!-- jika repost -->
-<%= render "display_post", post: @post %>
+<%= render "display_post", post: @post, status: :detail_post %>
 <%= render "show_comments", new_comment: @comment, post: @post %>

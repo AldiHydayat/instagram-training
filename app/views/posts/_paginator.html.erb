@@ -1,0 +1,5 @@
+<% if posts.current_page < posts.total_pages %>
+  <div class="paginator">
+    <%= link_to_next_page posts, 'Load More', remote: true %>
+  </div>
+<% end %>

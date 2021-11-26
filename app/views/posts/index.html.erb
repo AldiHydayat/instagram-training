@@ -1,5 +1,9 @@
+<%= show_notice_if_notice_not_nil(flash[:notice]) %>
 <% if @posts.present? %>
-  <%= render 'loop_posts', posts: @posts %>
+  <div class="posts-list">
+    <%= render 'loop_posts', posts: @posts %>
+  </div>
+  <%= render 'paginator', posts: @posts %>
 <% elsif @users && params['keyword'] != '' %>
   <% if @users.present? %>
     <% @users.each do |user| %>

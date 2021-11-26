@@ -1,0 +1,2 @@
+$('.posts-list').append("<%= j render(partial: 'loop_posts') %>")
+$('.paginator').html("<%= j link_to_next_page(@archives, 'Load More', remote: true, page: @archives.current_page + 1) %>")

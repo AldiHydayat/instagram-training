@@ -21,10 +21,10 @@ auto unfollow saat blokir v
 arsip, simpan menggunakan 1 tabel dengan enum.
 hapus postingan. v
 
-load more js
-helper / partial Like
-partial comment
-partial if else yang sama
+load more js v
+helper / partial Like v
+partial comment v
+partial if else yang sama v
 
 repost bisa diarsipkan?
 http://localhost:3000/posts/uploads-tmp-1637573837-385233362631763-0002-0644-screenshot_2021-11-05_09-34-58-png
